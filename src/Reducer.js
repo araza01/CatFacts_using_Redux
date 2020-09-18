@@ -26,6 +26,7 @@ export const handleData = () => {
         .then(response => response.json())
         .then((result) => {
             dispatch(receivedData(result));
+            return result;
         }, (error) => {
             dispatch(requestingData());
             return error;
@@ -37,11 +38,13 @@ export const dataReducer = (state = defaultState, action) => {
     switch(action.type) {
         case REQUESTING_DATA:
             return {
+                ...state,
                 isLoaded: true,
                 items: []
             }
         case RECEIVED_DATA:
             return {
+                ...state,
                 isLoaded: false,
                 items: action.items
             }
