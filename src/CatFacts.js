@@ -1,7 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import {handleData} from './Reducer'
 
-export default class CatFacts extends Component {
+const mapStateToProps = (state) => {
+    return {
+        isLoaded: state.isLoaded,
+        items: state.items,
+        error: state.error
+    }
+};
+
+const mapDispatchToProps = {
+    handleData
+};
+
+class CatFacts extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,13 +25,13 @@ export default class CatFacts extends Component {
     }
 
     componentDidMount() {
-        handleData();
+        this.props.handleData();
     }
 
     render() {
-        const isLoaded = this.state.isLoaded;
+        const isLoaded = this.props.isLoaded;
         const error = this.state.error;
-        const items = this.state.items;
+        const items = this.props.items;
         
         if(error) {
             return (
@@ -28,7 +41,7 @@ export default class CatFacts extends Component {
                     </article>
                 </section>
             );
-        } else if(!isLoaded) {
+        } else if(isLoaded) {
             return (
                 <section className="container">
                     <article className="fact-font">
@@ -46,15 +59,17 @@ export default class CatFacts extends Component {
                     <ul>
                         {
                             items.map((fact) => {
-                              return  <li key={fact.id}>{fact.text}</li>
+                              return  <li key={fact._id}>{fact.text}</li>
                             })
                         }
                     </ul>
                 </article>
                 <article className="btn">
-                    <button onClick={handleData}>Get more facts</button>
+                    <button onClick={this.props.handleData}>Get more facts</button>
                 </article>
             </section>
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(CatFacts);
