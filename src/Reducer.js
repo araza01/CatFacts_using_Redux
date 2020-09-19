@@ -15,21 +15,19 @@ const requestingData = () => {
 const receivedData = (data) => {
     return {
         type: RECEIVED_DATA,
-        items: data.text
+        items: data
     }
 }
 
 export const handleData = () => {
     return function(dispatch) {
         dispatch(requestingData());
-        return fetch("https://cat-fact.herokuapp.com/facts/random?amount=5")
+        fetch("https://cat-fact.herokuapp.com/facts/random?amount=5")
         .then(response => response.json())
         .then((result) => {
             dispatch(receivedData(result));
-            return result;
-        }, (error) => {
+        }).catch((error) => {
             dispatch(requestingData());
-            return error;
         })
     }
 }
